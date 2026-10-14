@@ -125,6 +125,18 @@ html:not([data-step="email"]):not([data-step="password"]) footer.site-email{disp
 #step-password .email-block .cant{margin-top:4px}
 #step-password .try{align-self:center;padding:0 4px;margin-top:-11px;font-size:16px;line-height:24px;font-weight:700;letter-spacing:-.02em}
 
+
+/* Floating labels: the label moves onto the border on focus / when filled */
+.float{position:relative;display:flex;width:100%}
+.float input::placeholder{color:transparent}
+.float input:focus{outline:none;border-color:#339DE7 !important;box-shadow:0 0 0 1px #339DE7}
+.float input[aria-invalid="true"]{border-color:var(--danger) !important;box-shadow:0 0 0 1px var(--danger)}
+.float-label{position:absolute;left:18px;top:14px;padding:0 4px;font-size:16px;line-height:24px;color:#757575;background:#fff;pointer-events:none;white-space:nowrap;transition:top .15s ease,left .15s ease,font-size .15s ease,line-height .15s ease,color .15s ease}
+.float input:focus + .float-label,.float input:not(:placeholder-shown) + .float-label,.float input:-webkit-autofill + .float-label{top:-9px;left:15px;font-size:12px;line-height:18px}
+.float input:focus + .float-label{color:#339DE7}
+.float input[aria-invalid="true"] + .float-label{color:var(--danger)}
+@media (prefers-reduced-motion:reduce){.float-label{transition:none}}
+
 /* Views: ?step=email (default) | 2   and   ?scenario=no-build (default) | build-plus | build-only */
 #step-nobuild,#step-login,#step-password{display:none}
 html[data-step="password"] #step-password{display:flex}
@@ -170,7 +182,7 @@ html[data-scenario="build-plus"] #login-accounts{display:flex}
         <p class="body-text">Enter your email to continue.</p>
       </div>
       <div class="email-block">
-        <input id="email" type="email" autocomplete="username" placeholder="Email address*" aria-label="Email address" required>
+        <div class="float"><input id="email" type="email" autocomplete="username" placeholder=" " required><label class="float-label" for="email">Email address*</label></div>
         <a class="link cant" href="#" data-toast="Prototype: this would open account recovery.">Can&rsquo;t log in to your account?</a>
       </div>
       <button type="button" class="cta" id="continue">Continue</button>
@@ -188,8 +200,8 @@ html[data-scenario="build-plus"] #login-accounts{display:flex}
       </div>
       <div class="email-block" style="gap:12px">
         <div class="email-display"><span class="js-email">alex.morgan@company.com</span><a class="link edit" href="#" id="edit-email">Edit</a></div>
-        <div class="pw-field">
-          <input id="pw" type="password" autocomplete="current-password" placeholder="Password*" aria-label="Password" required>
+        <div class="pw-field float">
+          <input id="pw" type="password" autocomplete="current-password" placeholder=" " required><label class="float-label" for="pw">Password*</label>
           <button type="button" class="pw-toggle" id="pw-toggle" aria-label="Show password" aria-pressed="false">
             <svg viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M.8 7C2.6 3.6 5.6 1.5 9 1.5S15.4 3.6 17.2 7c-1.8 3.4-4.8 5.5-8.2 5.5S2.6 10.4.8 7z"/><circle cx="9" cy="7" r="2.6"/><path class="off" d="M2.5 12.5l13-11"/></svg>
           </button>
