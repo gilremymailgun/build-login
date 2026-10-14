@@ -92,10 +92,48 @@ footer.site a:hover{text-decoration:underline}
 .toast{position:fixed;left:50%;bottom:72px;transform:translateX(-50%) translateY(8px);background:var(--ink);color:#fff;font-size:14px;line-height:20px;padding:10px 16px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:calc(100% - 40px);text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+
+/* Step 1 (email) — matches the production login screen */
+html[data-step="email"] .form,html[data-step="password"] .form{max-width:320px;gap:20px}
+#step-email,#step-password{gap:24px}
+#step-email .top,#step-password .top{gap:17px;margin-bottom:1px}
+#step-email h1,#step-password h1{letter-spacing:-.02em}
+#step-email .body-text,#step-password .body-text{font-size:16px;line-height:24px;letter-spacing:-.02em}
+#step-email .email-block,#step-password .email-block{display:flex;flex-direction:column;gap:16px}
+#step-email .email-block input,#step-password .email-block input{width:100%;height:52px;padding:0 21px;border:1px solid #9C9C9C;border-radius:8px;background:#fff;font-family:inherit;font-size:16px;line-height:24px;color:var(--ink)}
+#step-email .email-block input::placeholder,#step-password .email-block input::placeholder{color:#757575;opacity:1}
+#step-email .email-block input[aria-invalid="true"],#step-password .email-block input[aria-invalid="true"]{border-color:var(--danger);box-shadow:0 0 0 1px var(--danger)}
+#step-email .cant,#step-password .cant{align-self:flex-start;padding:0 4px;font-size:16px;line-height:24px;font-weight:700;letter-spacing:-.02em}
+#step-email .cta,#step-password .cta{height:52px}
+.or{display:flex;align-items:center;gap:14px;height:26px;margin:-4px 0;font-size:12px;line-height:26px;color:var(--text)}
+.or::before,.or::after{content:"";flex:1;border-top:1px solid #9C9C9C;position:relative;top:-4px}
+.btn-passkey{display:flex;align-items:center;justify-content:flex-start;gap:17px;padding:0 18px;width:100%;height:52px;border:1px solid #212121;border-radius:8px;background:#fff;color:#212121;font-family:inherit;font-size:16px;line-height:24px;font-weight:700;cursor:pointer;transition:background .15s}
+.btn-passkey:hover{background:#F4F6F7}
+.btn-passkey svg{flex:none;width:17px;height:16px;color:#1755EE}
+footer.site-email{flex-direction:column;gap:12px;padding:24px 10px 17px;text-align:center}
+footer.site-email .line{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0 4px}
+footer.site-email .reg{font-weight:400}
+html[data-step="email"] footer.site-result,html[data-step="password"] footer.site-result{display:none}
+html:not([data-step="email"]):not([data-step="password"]) footer.site-email{display:none}
+
+
+.email-display{display:flex;align-items:center;justify-content:space-between;gap:12px;height:52px;padding:0 20px 0 15px;border:1px solid #9C9C9C;border-radius:8px;background:#fff;font-size:16px;line-height:24px;color:var(--ink)}
+.email-display .js-email{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.email-display .edit{flex:none;font-size:16px;line-height:24px;font-weight:700;letter-spacing:-.02em}
+.pw-field{position:relative;display:flex}
+.pw-field input{padding-right:52px !important}
+.pw-toggle{position:absolute;top:0;right:0;width:52px;height:52px;display:flex;align-items:center;justify-content:center;border:0;background:none;color:#4D4D4D;cursor:pointer;border-radius:8px}
+.pw-toggle svg{width:18px;height:14px;overflow:visible}
+.pw-toggle .off{display:none}
+.pw-toggle[aria-pressed="true"] .off{display:block}
+#step-password .email-block .cant{margin-top:4px}
+#step-password .try{align-self:center;padding:0 4px;margin-top:-11px;font-size:16px;line-height:24px;font-weight:700;letter-spacing:-.02em}
+
 /* Views: ?step=email (default) | 2   and   ?scenario=no-build (default) | build */
-#step-nobuild,#step-login{display:none}
+#step-nobuild,#step-login,#step-password{display:none}
+html[data-step="password"] #step-password{display:flex}
 html[data-step="email"] #step-email{display:flex}
-html[data-step="2"] #step-email{display:none}
+html[data-step="2"] #step-email,html[data-step="password"] #step-email{display:none}
 html[data-step="2"][data-scenario="no-build"] #step-nobuild{display:flex}
 html[data-step="2"]:not([data-scenario="no-build"]) #step-login{display:flex}
 
@@ -108,7 +146,7 @@ html[data-step="2"]:not([data-scenario="no-build"]) #step-login{display:flex}
   var sc = (q.get('scenario') || '').toLowerCase();
   sc = (sc === 'build' || sc === 'build-only' || sc === 'build-plus') ? 'build' : 'no-build';
   var st = (q.get('step') || '').toLowerCase();
-  st = (st === '2' || st === 'result') ? '2' : 'email';
+  st = (st === '2' || st === 'result') ? '2' : (st === 'password' ? 'password' : 'email');
   document.documentElement.setAttribute('data-scenario', sc);
   document.documentElement.setAttribute('data-step', st);
 })();
@@ -131,16 +169,38 @@ html[data-step="2"]:not([data-scenario="no-build"]) #step-login{display:flex}
     <section class="stack" id="step-email" aria-labelledby="h-email">
       <div class="top">
         <h1 id="h-email" tabindex="-1">Log in to Sinch Build</h1>
+        <p class="body-text">Enter your email to continue.</p>
       </div>
-      <div class="field">
-        <label for="email">Sinch ID email</label>
-        <input id="email" type="email" autocomplete="username" placeholder="name@company.com">
+      <div class="email-block">
+        <input id="email" type="email" autocomplete="username" placeholder="Email address*" aria-label="Email address" required>
+        <a class="link cant" href="#" data-toast="Prototype: this would open account recovery.">Can&rsquo;t log in to your account?</a>
       </div>
       <button type="button" class="cta" id="continue">Continue</button>
-      <div class="stack" style="gap:8px">
-        <p class="hint">New to Sinch Build? <button type="button" class="link" data-toast="Prototype: this would start Sinch Build sign-up.">Create an account</button></p>
-        <p class="hint">Looking for a different Sinch product? <a class="link" href="https://sinch.com/portals/" target="_blank" rel="noopener">See all products</a></p>
+      <div class="or" role="separator">OR</div>
+      <button type="button" class="btn-passkey" data-toast="Prototype: this would start passkey sign-in.">
+        <svg viewBox="0 0 17 16" aria-hidden="true" focusable="false"><circle cx="5.6" cy="4" r="3.5" fill="currentColor"/><path d="M0 16v-1.6c0-2.8 2.6-4.9 5.6-4.9s5.6 2.1 5.6 4.9V16z" fill="currentColor"/><circle cx="14.2" cy="4.6" r="2.3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M13.4 7h1.6v9h-1.6zM15 11h1.6v1.5H15z" fill="currentColor"/></svg>
+        Continue with a passkey
+      </button>
+    </section>
+
+    <section class="stack" id="step-password" aria-labelledby="h-password">
+      <div class="top">
+        <h1 id="h-password" tabindex="-1">Log in to Sinch Build</h1>
+        <p class="body-text">Enter your password to continue.</p>
       </div>
+      <div class="email-block" style="gap:12px">
+        <div class="email-display"><span class="js-email">alex.morgan@company.com</span><a class="link edit" href="#" id="edit-email">Edit</a></div>
+        <div class="pw-field">
+          <input id="pw" type="password" autocomplete="current-password" placeholder="Password*" aria-label="Password" required>
+          <button type="button" class="pw-toggle" id="pw-toggle" aria-label="Show password" aria-pressed="false">
+            <svg viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M.8 7C2.6 3.6 5.6 1.5 9 1.5S15.4 3.6 17.2 7c-1.8 3.4-4.8 5.5-8.2 5.5S2.6 10.4.8 7z"/><circle cx="9" cy="7" r="2.6"/><path class="off" d="M2.5 12.5l13-11"/></svg>
+          </button>
+        </div>
+        <a class="link cant" href="#" data-toast="Prototype: this would start a password reset.">Reset password</a>
+      </div>
+      <button type="button" class="cta" id="pw-continue">Continue</button>
+      <div class="or" role="separator">OR</div>
+      <a class="link try" href="#" data-toast="Prototype: this would offer other ways to log in, such as a passkey.">Try another way</a>
     </section>
 
     <section class="stack" id="step-nobuild" aria-labelledby="h-nobuild">
@@ -194,9 +254,13 @@ html[data-step="2"]:not([data-scenario="no-build"]) #step-login{display:flex}
   </div>
 </main>
 
-<footer class="site">
+<footer class="site site-result">
   <span><span class="reg">&copy; </span><a href="#">Sinch</a></span>
   <span><span class="reg">&bull; </span><a href="#">Support</a></span>
+</footer>
+<footer class="site site-email">
+  <div class="line">Don&rsquo;t have an account? <a href="#" data-toast="Prototype: this would start Sinch Build sign-up.">Signup</a></div>
+  <div class="line"><span><span class="reg">&copy; </span><a href="#">Sinch</a></span><span><span class="reg">&bull; </span><a href="#">Terms of Service</a></span><span><span class="reg">&bull; </span><a href="#">Privacy Notice</a></span><span><span class="reg">&bull; </span><a href="#">Conversation API Terms</a></span></div>
 </footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -216,6 +280,27 @@ html[data-step="2"]:not([data-scenario="no-build"]) #step-login{display:flex}
     el.addEventListener('click', function (e) { e.preventDefault(); showToast(el.getAttribute('data-toast')); });
   });
 
+
+  // Password step (between email and the result screen)
+  var pw = document.getElementById('pw');
+  function submitPw() {
+    if (!pw.value) { pw.setAttribute('aria-invalid', 'true'); pw.focus(); return; }
+    pw.removeAttribute('aria-invalid');
+    if (root.getAttribute('data-scenario') === 'no-build') goTo('2');
+    else showToast('Prototype: this would log you in to Sinch Build.');
+  }
+  document.getElementById('pw-continue').addEventListener('click', submitPw);
+  pw.addEventListener('keydown', function (e) { if (e.key === 'Enter') submitPw(); });
+  pw.addEventListener('input', function () { pw.removeAttribute('aria-invalid'); });
+  document.getElementById('edit-email').addEventListener('click', function (e) { e.preventDefault(); goTo('email'); email.focus(); });
+  var pwToggle = document.getElementById('pw-toggle');
+  pwToggle.addEventListener('click', function () {
+    var show = pw.type === 'password';
+    pw.type = show ? 'text' : 'password';
+    pwToggle.setAttribute('aria-pressed', show ? 'true' : 'false');
+    pwToggle.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+  });
+  document.getElementById('start-over').addEventListener('click', function () { pw.value = ''; pw.type = 'password'; pw.removeAttribute('aria-invalid'); pwToggle.setAttribute('aria-pressed', 'false'); pwToggle.setAttribute('aria-label', 'Show password'); });
 
   // "What is a Sinch ID?" tooltip: hover/focus to preview, click or Enter to pin, Esc or outside click to close
   var tips = [];
@@ -242,7 +327,7 @@ html[data-step="2"]:not([data-scenario="no-build"]) #step-login{display:flex}
     root.setAttribute('data-step', step);
     var h = document.querySelector(step === '2'
       ? (root.getAttribute('data-scenario') === 'no-build' ? '#h-nobuild' : '#h-login')
-      : '#h-email');
+      : (step === 'password' ? '#h-password' : '#h-email'));
     if (h) h.focus();
   }
 
@@ -259,7 +344,7 @@ html[data-step="2"]:not([data-scenario="no-build"]) #step-login{display:flex}
     var m = v.split('@')[0].split(/[._-]/);
     if (m.length > 1 && m[1]) initials = (m[0].charAt(0) + m[1].charAt(0)).toUpperCase();
     document.querySelectorAll('.avatar').forEach(function (n) { n.textContent = initials; });
-    goTo('2');
+    goTo('password');
   });
   email.addEventListener('input', function () { email.removeAttribute('aria-invalid'); });
   email.addEventListener('keydown', function (e) { if (e.key === 'Enter') document.getElementById('continue').click(); });
