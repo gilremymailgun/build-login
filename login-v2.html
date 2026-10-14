@@ -137,6 +137,10 @@ html:not([data-step="email"]):not([data-step="password"]) footer.site-email{disp
 .float input[aria-invalid="true"] + .float-label{color:var(--danger)}
 @media (prefers-reduced-motion:reduce){.float-label{transition:none}}
 
+.legal{margin:0;font-size:14px;line-height:22px;font-weight:400;letter-spacing:-.02em;color:var(--muted)}
+.legal a{color:var(--link);text-decoration:none}
+.legal a:hover{text-decoration:underline}
+
 /* Views: ?step=email (default) | 2   and   ?scenario=no-build (default) | build-plus | build-only */
 #step-nobuild,#step-login,#step-password{display:none}
 html[data-step="password"] #step-password{display:flex}
@@ -227,8 +231,9 @@ html[data-scenario="build-plus"] #login-accounts{display:flex}
           </div>
         </div>
       </div>
-      <p class="body-text">This email has a Sinch ID, but no Sinch Build account yet. You can create one now using your Sinch ID.</p>
+      <p class="body-text" style="font-weight:500">This email has a Sinch ID, but no Sinch Build account yet. You can create one now using your Sinch ID.</p>
       <button type="button" class="cta" data-toast="Prototype: this would start Sinch Build sign-up with this Sinch ID.">Create a Sinch Build account</button>
+      <p class="legal">By clicking the button, I expressly agree to the <a href="#">Terms&nbsp;of&nbsp;Service,</a> <a href="#">Privacy&nbsp;Policy</a> and <a href="#">Conversation&nbsp;API Terms&nbsp;and&nbsp;Pricing</a></p>
       <hr class="divider">
       <div class="accounts">
         <h2>Log in to your existing Sinch account</h2>
