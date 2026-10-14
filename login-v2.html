@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Log in to Sinch Build (Login V2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1A2126; --text:#242424; --label:#4B575E; --muted:#626C73; --link:#0A5D9A;
+  --primary:#1860F0; --primary-hover:#124FCB; --line:#B7C1C7; --card-bg:#F7F9FA; --avatar:#DCE2E5; --danger:#B3261E;
+  --font:"DM Sans",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box;font-optical-sizing:none;font-variation-settings:"opsz" 14}
+html,body{margin:0;padding:0}
+body{font-family:var(--font);color:var(--ink);background:#fff;min-height:100vh;min-height:100dvh;position:relative;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+
+.start-over{
+  position:absolute;top:0;right:0;padding:24px 40px;display:none;
+  font-size:16px;line-height:24px;font-weight:700;color:var(--link);text-decoration:none;
+}
+.start-over:hover{text-decoration:underline}
+html[data-step="2"] .start-over{display:block}
+@media (max-width:480px){.start-over{padding:16px 20px}}
+
+main{flex:1;display:flex;justify-content:center;align-items:center;padding:96px 20px}
+.form{width:100%;max-width:325px;display:flex;flex-direction:column;gap:24px}
+.logo{display:block;align-self:flex-start;width:143px;height:32px;max-width:100%}
+.stack{display:flex;flex-direction:column;gap:24px}
+.top{display:flex;flex-direction:column;gap:16px}
+h1{margin:0;font-size:24px;line-height:30px;font-weight:400;letter-spacing:.18px;color:var(--ink)}
+h2{margin:0;font-size:14px;line-height:22px;font-weight:500;color:var(--text)}
+p{margin:0}
+.body-text{font-size:14px;line-height:22px;color:var(--text)}
+
+.id-card{display:flex;align-items:center;gap:8px;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--card-bg)}
+.avatar{flex:none;width:40px;height:40px;border-radius:50%;background:var(--avatar);color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:16px;line-height:24px;font-weight:700;letter-spacing:-.02em}
+.id-text{min-width:0;display:flex;flex-direction:column}
+.id-label{font-size:12px;line-height:20px;color:var(--label)}
+.id-email{font-size:14px;line-height:22px;font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.field{display:flex;flex-direction:column;gap:8px}
+.field label{font-size:14px;line-height:22px;font-weight:500;color:var(--ink)}
+.field input{
+  width:100%;height:50px;padding:0 16px;border:1px solid var(--muted);border-radius:8px;background:#fff;
+  font-family:inherit;font-size:16px;line-height:24px;color:var(--ink);
+}
+.field input::placeholder{color:#8A949B}
+.field input[aria-invalid="true"]{border-color:var(--danger);box-shadow:0 0 0 1px var(--danger)}
+.row-link{display:flex;justify-content:flex-end}
+.link{font-family:inherit;font-size:14px;line-height:22px;font-weight:500;letter-spacing:-.02em;color:var(--link);background:none;border:0;padding:0;cursor:pointer;text-decoration:none}
+.link:hover{text-decoration:underline}
+
+.cta{width:100%;height:50px;padding:13px 25px;border:0;border-radius:8px;background:var(--primary);color:#fff;font-family:inherit;font-size:16px;line-height:24px;font-weight:700;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.05);transition:background .15s}
+.cta:hover{background:var(--primary-hover)}
+.cta-outline{width:100%;height:44px;border:1px solid var(--link);border-radius:8px;background:#fff;color:var(--link);font-family:inherit;font-size:14px;line-height:22px;font-weight:700;cursor:pointer;transition:background .15s}
+.cta-outline:hover{background:#E6F1FA}
+.divider{border:0;border-top:1px solid var(--line);margin:0;height:0}
+.hint{font-size:14px;line-height:22px;color:var(--text)}
+
+.accounts{display:flex;flex-direction:column;gap:16px}
+.accounts ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px}
+.acc{display:flex;align-items:center;gap:8px;padding:16px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.tile{flex:none;display:block;width:40px;height:40px}
+.acc-text{flex:1;min-width:0;display:flex;flex-direction:column}
+.acc-name{font-size:14px;line-height:22px;font-weight:700;color:var(--ink)}
+.acc-email{font-size:12px;line-height:20px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.acc-btn{flex:none;height:32px;padding:0 4px;display:inline-flex;align-items:center;gap:4px;border:0;border-radius:4px;background:transparent;font-family:inherit;font-size:14px;line-height:22px;font-weight:700;color:var(--link);cursor:pointer;transition:background .15s}
+.acc-btn .arr{width:14px;height:14px}
+.acc-btn:hover{background:#E6F1FA}
+
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:4px}
+h1:focus{outline:none}
+
+footer.site{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:center;align-items:center;gap:4px;padding:24px 10px 10px;font-size:16px;line-height:24px;color:var(--ink)}
+footer.site .reg{font-variation-settings:"opsz" 9;font-weight:400}
+footer.site a{color:var(--link);font-weight:700;text-decoration:none}
+footer.site a:hover{text-decoration:underline}
+
+.toast{position:fixed;left:50%;bottom:72px;transform:translateX(-50%) translateY(8px);background:var(--ink);color:#fff;font-size:14px;line-height:20px;padding:10px 16px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:calc(100% - 40px);text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.id-wrap{display:flex;flex-direction:column;gap:8px}
+.tip-row{position:relative;display:flex;justify-content:flex-end}
+.tip-btn{display:inline-flex;align-items:center;gap:4px}
+.tip{position:absolute;top:calc(100% + 10px);right:0;z-index:5;width:280px;max-width:calc(100vw - 40px);padding:12px 14px;border-radius:8px;background:var(--ink);color:#fff;font-size:14px;line-height:20px;font-weight:400;letter-spacing:0;box-shadow:0 4px 16px rgba(0,0,0,.18)}
+.tip::before{content:"";position:absolute;top:-5px;right:24px;width:10px;height:10px;background:var(--ink);transform:rotate(45deg);border-radius:2px}
+.tip[hidden]{display:none}
+/* Views: ?step=email (default) | 2   and   ?scenario=no-build (default) | build-plus | build-only */
+#step-nobuild,#step-login{display:none}
+html[data-step="email"] #step-email{display:flex}
+html[data-step="2"] #step-email{display:none}
+html[data-step="2"][data-scenario="no-build"] #step-nobuild{display:flex}
+html[data-step="2"]:not([data-scenario="no-build"]) #step-login{display:flex}
+#login-accounts{display:none}
+html[data-scenario="build-plus"] #login-accounts{display:flex}
+
+@media (max-width:480px){main{padding-top:72px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<script>
+(function () {
+  var q = new URLSearchParams(window.location.search);
+  var sc = (q.get('scenario') || '').toLowerCase();
+  if (sc !== 'build-plus' && sc !== 'build-only') sc = 'no-build';
+  var st = (q.get('step') || '').toLowerCase();
+  st = (st === '2' || st === 'result') ? '2' : 'email';
+  document.documentElement.setAttribute('data-scenario', sc);
+  document.documentElement.setAttribute('data-step', st);
+})();
+</script>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<g id="logo-build"><path d="M67.6689 16.2676C70.62 16.2676 72.6617 17.0626 74.4775 19.334L70.9023 21.377C70.2228 20.1979 69.1998 19.6201 67.7246 19.6201C66.1928 19.6202 65.3431 20.2993 65.3428 21.207C65.3428 22.1848 66.6119 22.4877 68.4189 22.918C68.7048 22.986 69.0046 23.0571 69.3145 23.1348C72.436 23.9277 74.8203 25.0054 74.8213 28.124C74.8211 31.3556 71.6431 33.5653 67.6699 33.5654C64.3789 33.5607 61.8814 32.6549 60.292 30.0459L64.0391 27.8926C64.7757 29.3673 66.0235 30.1044 67.7832 30.1025C69.4352 30.1024 70.4502 29.3662 70.4502 28.2881C70.4501 27.21 69.0335 26.8728 66.5908 26.3613C63.2427 25.6235 61.0869 24.264 61.0869 21.4287C61.0871 18.3625 64.2077 16.2676 67.6689 16.2676Z" fill="#1A2126"/><path d="M111.24 16.2705C114.417 16.2706 117.253 17.9215 118.615 20.4668L114.984 22.6221C114.627 21.9251 114.082 21.3427 113.41 20.9414C112.737 20.5402 111.965 20.3364 111.183 20.3525C108.685 20.3527 106.812 22.2227 106.812 24.8877C106.813 27.4966 108.571 29.4803 111.183 29.4805C112.885 29.4805 114.361 28.6286 115.041 27.2119L118.672 29.3115C117.924 30.6169 116.841 31.6989 115.534 32.4453C114.228 33.1917 112.746 33.5766 111.24 33.5576C106.202 33.5624 102.505 29.9337 102.505 24.8887C102.505 19.8437 106.136 16.2705 111.24 16.2705Z" fill="#1A2126"/><path fill-rule="evenodd" clip-rule="evenodd" d="M148.803 18.6162C150.029 17.1591 151.919 16.2979 154.14 16.2979C158.847 16.298 162.427 20.04 162.427 24.8418C162.427 29.6435 158.846 33.3856 154.14 33.3857C151.819 33.3857 149.863 32.4586 148.637 30.8691V33.0547H145.123V10.2041H148.803V18.6162ZM153.741 19.7422C150.858 19.7424 148.77 21.8615 148.77 24.8418C148.77 27.7889 150.858 29.908 153.741 29.9082C156.625 29.9082 158.747 27.7891 158.747 24.8418C158.747 21.8613 156.625 19.7422 153.741 19.7422Z" fill="#1A2126"/><path d="M168.503 25.6367C168.503 28.3192 169.928 29.9082 172.281 29.9082C174.634 29.9082 176.225 28.2523 176.226 25.6367V16.6289H179.905V33.0547H176.325V31.4648C175.265 32.69 173.639 33.3857 171.65 33.3857C167.673 33.3855 164.822 30.5051 164.822 25.9688L164.823 25.9678V16.6289H168.503V25.6367Z" fill="#1A2126"/><path fill-rule="evenodd" clip-rule="evenodd" d="M214.517 33.0547H211.003V30.8691C209.81 32.4584 207.821 33.3857 205.501 33.3857C200.794 33.3857 197.214 29.6436 197.214 24.8418C197.214 20.0399 200.794 16.2979 205.501 16.2979C207.722 16.2979 209.611 17.1592 210.838 18.6494V10.2041H214.517V33.0547ZM205.898 19.7422C203.015 19.7422 200.894 21.8945 200.894 24.8418C200.894 27.789 203.015 29.9081 205.898 29.9082C208.782 29.9082 210.871 27.7891 210.871 24.8418C210.871 21.8944 208.782 19.7422 205.898 19.7422Z" fill="#1A2126"/><path d="M92.2412 16.2695C96.9634 16.2697 100.243 19.9557 100.243 24.2656V33.1084H95.9922V24.5488C95.9921 21.9402 94.4043 20.4094 92.249 20.4092C89.9212 20.4092 88.5021 22.0607 88.502 24.5488V33.1084L84.2402 33.1133V24.2656C84.2403 19.7294 87.5874 16.2695 92.2412 16.2695Z" fill="#1A2126"/><path d="M81.2891 33.1074L77.0889 33.1123V18.7246L81.2891 16.2695V33.1074Z" fill="#1A2126"/><path d="M125.155 17.5166C126.309 16.7266 127.67 16.2933 129.069 16.2695C133.722 16.2695 136.957 19.444 136.957 24.1484V33.1123H132.707V24.5479C132.707 21.939 131.118 20.4082 128.963 20.4082C126.635 20.4082 125.216 22.0597 125.216 24.5479V33.1074H120.947V11.6787L125.155 9.24023V17.5166Z" fill="#1A2126"/><path d="M186.964 33.0547H183.285V16.6289H186.964V33.0547Z" fill="#1A2126"/><path d="M194.835 33.0547H191.155V10.2041H194.835V33.0547Z" fill="#1A2126"/><path d="M185.141 9.83984C186.367 9.83984 187.262 10.7339 187.263 11.959C187.263 13.1512 186.367 14.0459 185.141 14.0459C183.914 14.0457 183.02 13.1511 183.02 11.959C183.02 10.734 183.914 9.84001 185.141 9.83984Z" fill="#1A2126"/><path d="M0 9.6C0 4.29846 4.30535 0 9.61538 0H38.4615C43.7716 0 48.0769 4.29846 48.0769 9.6V38.4C48.0769 43.7015 43.7716 48 38.4615 48H9.61538C4.30535 48 0 43.7015 0 38.4V9.6Z" fill="#FADA5A"/><path d="M41.4543 20.9724C40.625 19.7954 39.4702 18.9129 38.1171 18.4234C37.2468 18.0985 36.3345 17.9381 35.4055 17.9476C33.7878 17.958 32.0724 18.4643 30.4484 19.4128L16.0128 27.85C13.7663 29.1622 12.0961 28.9862 11.0852 28.6047C10.343 28.3405 9.71205 27.8616 9.25749 27.2212C8.80189 26.5797 8.55834 25.8261 8.55519 25.0411C8.55099 24.255 8.78404 23.4983 9.2323 22.8527C9.67951 22.206 10.3062 21.7207 11.0495 21.4451C12.051 21.0541 13.718 20.8581 15.9792 22.1421L17.6054 23.0707C17.5109 23.3966 17.4405 23.732 17.3965 24.0674L17.3125 24.7026L29.6275 17.6048L29.6527 17.5891C29.9823 17.3564 30.2101 17.0105 30.2951 16.6175C30.3802 16.2234 30.3151 15.8147 30.1104 15.4677C29.9067 15.1208 29.5813 14.864 29.1939 14.7456C28.8076 14.6272 28.395 14.6576 28.0307 14.8315L28.0192 14.8368L24.0332 17.1479L19.9726 14.8294L19.9495 14.8179C19.581 14.646 19.1653 14.6198 18.779 14.7435C18.3927 14.8672 18.0694 15.1292 17.8689 15.4824C17.6683 15.8356 17.6096 16.2475 17.704 16.6416C17.7975 17.0357 18.0347 17.3784 18.3717 17.6048L20.8492 19.0061L20.5091 19.2063L20.5017 19.2105C20.0199 19.5155 19.5789 19.8803 19.1884 20.2943L17.5623 19.3583C14.941 17.8679 12.2105 17.5482 9.87581 18.459C8.90267 18.8342 8.0072 19.4306 7.28705 20.1852C6.5669 20.9388 6.01157 21.8601 5.68194 22.8516C5.12345 24.5894 5.25572 26.4498 6.05776 28.09C6.85979 29.7303 8.24655 30.9807 9.96085 31.6096C10.8322 31.9345 11.7465 32.0948 12.6735 32.0854C14.2901 32.0749 16.0044 31.5676 17.6306 30.6181L17.6557 30.6023L32.0588 22.1819C34.3042 20.8707 35.9755 21.0468 36.9885 21.4273C37.7297 21.6903 38.3616 22.1672 38.8173 22.8076C39.2718 23.449 39.5122 24.2037 39.5143 24.9898C39.5154 25.4038 39.4524 25.8146 39.3285 26.2035C39.1458 26.7422 38.8414 27.2442 38.4456 27.653C38.0509 28.0628 37.5607 28.3867 37.0263 28.59C36.0248 28.9799 34.3557 29.1748 32.0945 27.8919L30.4683 26.9633C30.5723 26.607 30.6458 26.2422 30.6898 25.8754L30.7654 25.2455L21.1736 30.8528V34.5589L27.5667 30.8319L27.5772 30.8256C28.057 30.5206 28.4979 30.1559 28.8874 29.7419L30.5145 30.6778C33.1463 32.163 35.8768 32.4816 38.1979 31.5771C39.5479 31.0708 40.6911 30.1758 41.5068 28.9883C42.3214 27.8018 42.7455 26.4131 42.7329 24.9751H42.735C42.7266 23.5339 42.2857 22.1504 41.4564 20.9734L41.4543 20.9724Z" fill="#1A2126"/></g>
+<g id="tile-engage"><path d="M0 9.6C0 4.29846 4.30884 0 9.62319 0H38.4927C43.8071 0 48.1159 4.29846 48.1159 9.6V38.4C48.1159 43.7015 43.8071 48 38.4927 48H9.62319C4.30884 48 0 43.7015 0 38.4V9.6Z" fill="#7FC7AF"/><path d="M41.4879 20.9724C40.6579 19.7954 39.5023 18.9129 38.148 18.4234C37.277 18.0985 36.364 17.9381 35.4342 17.9476C33.8152 17.958 32.0984 18.4643 30.4731 19.4128L16.0258 27.85C13.7775 29.1622 12.1059 28.9862 11.0942 28.6047C10.3514 28.3405 9.71993 27.8616 9.26501 27.2212C8.80903 26.5797 8.56528 25.8261 8.56213 25.0411C8.55793 24.255 8.79117 23.4983 9.23979 22.8527C9.68736 22.206 10.3146 21.7207 11.0584 21.4451C12.0607 21.0541 13.7291 20.8581 15.9922 22.1421L17.6196 23.0707C17.5251 23.3966 17.4547 23.732 17.4106 24.0674L17.3265 24.7026L29.6515 17.6048L29.6767 17.5891C30.0066 17.3564 30.2346 17.0105 30.3197 16.6175C30.4048 16.2234 30.3397 15.8147 30.1348 15.4677C29.931 15.1208 29.6053 14.864 29.2176 14.7456C28.831 14.6272 28.4181 14.6576 28.0535 14.8315L28.0419 14.8368L24.0527 17.1479L19.9888 14.8294L19.9657 14.8179C19.5969 14.646 19.1809 14.6198 18.7943 14.7435C18.4076 14.8672 18.084 15.1292 17.8834 15.4824C17.6827 15.8356 17.6239 16.2475 17.7184 16.6416C17.8119 17.0357 18.0494 17.3784 18.3866 17.6048L20.8661 19.0061L20.5257 19.2063L20.5183 19.2105C20.0361 19.5155 19.5948 19.8803 19.204 20.2943L17.5766 19.3583C14.9531 17.8679 12.2204 17.5482 9.88383 18.459C8.90989 18.8342 8.0137 19.4306 7.29297 20.1852C6.57223 20.9388 6.01645 21.8601 5.68655 22.8516C5.12761 24.5894 5.25999 26.4498 6.06267 28.09C6.86536 29.7303 8.25325 30.9807 9.96893 31.6096C10.841 31.9345 11.7561 32.0948 12.6838 32.0854C14.3017 32.0749 16.0174 31.5676 17.6449 30.6181L17.6701 30.6023L32.0848 22.1819C34.3321 20.8707 36.0047 21.0468 37.0186 21.4272C37.7603 21.6903 38.3928 22.1672 38.8488 22.8076C39.3037 23.449 39.5443 24.2037 39.5464 24.9897C39.5474 25.4037 39.4844 25.8146 39.3604 26.2035C39.1776 26.7422 38.8729 27.2442 38.4768 27.653C38.0818 28.0628 37.5911 28.3867 37.0564 28.59C36.0541 28.9799 34.3836 29.1748 32.1205 27.8919L30.4931 26.9633C30.5971 26.607 30.6706 26.2422 30.7148 25.8754L30.7904 25.2455L21.1908 30.8528V34.5589L27.5891 30.8319L27.5996 30.8256C28.0798 30.5206 28.521 30.1559 28.9108 29.7419L30.5393 30.6778C33.1732 32.163 35.9059 32.4816 38.2289 31.5771C39.58 31.0708 40.7241 30.1758 41.5405 28.9883C42.3558 27.8018 42.7802 26.4131 42.7676 24.9751H42.7697C42.7613 23.5339 42.32 22.1504 41.4901 20.9734L41.4879 20.9724Z" fill="#1A2126"/></g>
+<g id="tile-mailgun"><path d="M0 9.6C0 4.29846 4.29846 0 9.6 0H38.4C43.7015 0 48 4.29846 48 9.6V38.4C48 43.7015 43.7015 48 38.4 48H9.6C4.29846 48 0 43.7015 0 38.4V9.6Z" fill="#F04126"/><path d="M41.388 20.9724C40.56 19.7954 39.4071 18.9129 38.0561 18.4234C37.1872 18.0985 36.2764 17.9381 35.3488 17.9476C33.7337 17.958 32.0211 18.4643 30.3997 19.4128L15.9872 27.85C13.7443 29.1622 12.0767 28.9862 11.0674 28.6047C10.3264 28.3405 9.69651 27.8616 9.24268 27.2212C8.7878 26.5797 8.54464 25.8261 8.5415 25.0411C8.53731 24.255 8.76999 23.4983 9.21753 22.8527C9.66402 22.206 10.2897 21.7207 11.0318 21.4451C12.0317 21.0541 13.6961 20.8581 15.9537 22.1421L17.5772 23.0707C17.4829 23.3966 17.4126 23.732 17.3686 24.0674L17.2848 24.7026L29.5801 17.6048L29.6052 17.5891C29.9343 17.3564 30.1618 17.0105 30.2467 16.6175C30.3315 16.2234 30.2666 15.8147 30.0622 15.4677C29.8589 15.1208 29.5339 14.864 29.1472 14.7456C28.7615 14.6272 28.3496 14.6576 27.9859 14.8315L27.9744 14.8368L23.9947 17.1479L19.9407 14.8294L19.9176 14.8179C19.5497 14.646 19.1347 14.6198 18.749 14.7435C18.3633 14.8672 18.0405 15.1292 17.8403 15.4824C17.6401 15.8356 17.5814 16.2475 17.6757 16.6416C17.769 17.0357 18.0059 17.3784 18.3423 17.6048L20.8158 19.0061L20.4762 19.2063L20.4689 19.2105C19.9878 19.5155 19.5476 19.8803 19.1577 20.2943L17.5342 19.3583C14.9171 17.8679 12.191 17.5482 9.86001 18.459C8.88842 18.8342 7.99439 19.4306 7.27539 20.1853C6.55639 20.9388 6.00195 21.8601 5.67284 22.8516C5.11525 24.5894 5.24731 26.4498 6.04806 28.09C6.84881 29.7303 8.23336 30.9807 9.94491 31.6096C10.8148 31.9345 11.7277 32.0948 12.6532 32.0854C14.2673 32.0749 15.9788 31.5676 17.6023 30.6181L17.6275 30.6023L32.0075 22.1819C34.2494 20.8707 35.9179 21.0468 36.9294 21.4273C37.6693 21.6903 38.3003 22.1672 38.7551 22.8076C39.209 23.449 39.449 24.2037 39.4511 24.9898C39.4521 25.4038 39.3892 25.8146 39.2656 26.2035C39.0832 26.7422 38.7793 27.2442 38.3841 27.653C37.99 28.0628 37.5006 28.3867 36.9671 28.59C35.9672 28.9799 34.3007 29.1748 32.0431 27.8919L30.4196 26.9633C30.5233 26.607 30.5967 26.2422 30.6407 25.8754L30.7162 25.2455L21.1397 30.8528V34.5589L27.5226 30.8319L27.5331 30.8256C28.0121 30.5206 28.4523 30.1559 28.8411 29.7419L30.4657 30.6778C33.0933 32.163 35.8194 32.4816 38.1368 31.5771C39.4846 31.0708 40.626 30.1758 41.4404 28.9883C42.2537 27.8018 42.6771 26.4131 42.6646 24.9751H42.6667C42.6583 23.5339 42.2181 22.1504 41.3901 20.9734L41.388 20.9724Z" fill="#fff"/></g>
+</defs></svg>
+
+<a class="start-over" id="start-over" href="#">Start over</a>
+
+<main>
+  <div class="form">
+    <svg class="logo" width="143" height="32" viewBox="0 0 215 48" role="img" aria-label="Sinch Build"><use href="#logo-build"/></svg>
+
+    <section class="stack" id="step-email" aria-labelledby="h-email">
+      <div class="top">
+        <h1 id="h-email" tabindex="-1">Log in to Sinch Build</h1>
+      </div>
+      <div class="field">
+        <label for="email">Sinch ID email</label>
+        <input id="email" type="email" autocomplete="username" placeholder="name@company.com">
+      </div>
+      <button type="button" class="cta" id="continue">Continue</button>
+      <p class="hint">New to Sinch Build? <button type="button" class="link" data-toast="Prototype: this would start Sinch Build sign-up.">Create an account</button></p>
+    </section>
+
+    <section class="stack" id="step-nobuild" aria-labelledby="h-nobuild">
+      <div class="top">
+        <h1 id="h-nobuild" tabindex="-1">You don&rsquo;t have a Sinch Build account yet</h1>
+        <div class="id-wrap">
+          <div class="id-card">
+          <div class="avatar" aria-hidden="true">AM</div>
+          <div class="id-text"><span class="id-label">Signed in with your Sinch&nbsp;ID</span><span class="id-email js-email">alex.morgan@company.com</span></div>
+        </div>
+          <div class="tip-row">
+            <button type="button" class="link tip-btn" aria-expanded="false" aria-describedby="tip-1">What is a Sinch ID? <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 7.2v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="4.8" r=".9" fill="currentColor"/></svg></button>
+            <div class="tip" role="tooltip" id="tip-1" hidden>Your Sinch ID is the one account you use to sign in across Sinch products. A single Sinch ID can be linked to several products, such as Engage and Mailgun.</div>
+          </div>
+        </div>
+      </div>
+      <p class="body-text">This email has a Sinch ID, but no Sinch Build account yet. You can create one now using your Sinch ID.</p>
+      <button type="button" class="cta" data-toast="Prototype: this would start Sinch Build sign-up with this Sinch ID.">Create a Sinch Build account</button>
+      <hr class="divider">
+      <div class="accounts">
+        <h2>Log in to your existing Sinch account</h2>
+        <ul>
+          <li class="acc">
+            <svg class="tile" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#tile-engage"/></svg>
+            <div class="acc-text"><span class="acc-name">Sinch Engage</span><span class="acc-email js-email">alex.morgan@company.com</span></div>
+            <button type="button" class="acc-btn" aria-label="Log in to Sinch Engage" data-toast="Prototype: this would take you to your Sinch Engage dashboard.">Log in <svg class="arr" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </li>
+          <li class="acc">
+            <svg class="tile" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#tile-mailgun"/></svg>
+            <div class="acc-text"><span class="acc-name">Sinch Mailgun</span><span class="acc-email js-email">alex.morgan@company.com</span></div>
+            <button type="button" class="acc-btn" aria-label="Log in to Sinch Mailgun" data-toast="Prototype: this would take you to your Sinch Mailgun dashboard.">Log in <svg class="arr" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="stack" id="step-login" aria-labelledby="h-login">
+      <div class="top">
+        <h1 id="h-login" tabindex="-1">Log in to Sinch Build</h1>
+        <div class="id-wrap">
+          <div class="id-card">
+          <div class="avatar" aria-hidden="true">AM</div>
+          <div class="id-text"><span class="id-label">Signed in with your Sinch&nbsp;ID</span><span class="id-email js-email">alex.morgan@company.com</span></div>
+        </div>
+          <div class="tip-row">
+            <button type="button" class="link tip-btn" aria-expanded="false" aria-describedby="tip-2">What is a Sinch ID? <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 7.2v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="4.8" r=".9" fill="currentColor"/></svg></button>
+            <div class="tip" role="tooltip" id="tip-2" hidden>Your Sinch ID is the one account you use to sign in across Sinch products. A single Sinch ID can be linked to several products, such as Engage and Mailgun.</div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" type="password" autocomplete="current-password">
+        </div>
+        <div class="row-link"><button type="button" class="link" data-toast="Prototype: this would start a password reset.">Forgot password?</button></div>
+      </div>
+      <button type="button" class="cta" id="login">Log in</button>
+
+      <div class="stack" id="login-accounts">
+        <hr class="divider">
+        <div class="accounts">
+          <h2>Log in to your existing Sinch account</h2>
+          <ul>
+            <li class="acc">
+              <svg class="tile" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#tile-engage"/></svg>
+              <div class="acc-text"><span class="acc-name">Sinch Engage</span><span class="acc-email js-email">alex.morgan@company.com</span></div>
+              <button type="button" class="acc-btn" aria-label="Log in to Sinch Engage" data-toast="Prototype: this would take you to your Sinch Engage dashboard.">Log in <svg class="arr" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </li>
+            <li class="acc">
+              <svg class="tile" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#tile-mailgun"/></svg>
+              <div class="acc-text"><span class="acc-name">Sinch Mailgun</span><span class="acc-email js-email">alex.morgan@company.com</span></div>
+              <button type="button" class="acc-btn" aria-label="Log in to Sinch Mailgun" data-toast="Prototype: this would take you to your Sinch Mailgun dashboard.">Log in <svg class="arr" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="site">
+  <span><span class="reg">&copy; </span><a href="#">Sinch</a></span>
+  <span><span class="reg">&bull; </span><a href="#">Support</a></span>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toast = document.getElementById('toast');
+  var timer;
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(timer);
+    timer = setTimeout(function () { toast.classList.remove('show'); }, 3200);
+  }
+  document.querySelectorAll('[data-toast]').forEach(function (el) {
+    el.addEventListener('click', function (e) { e.preventDefault(); showToast(el.getAttribute('data-toast')); });
+  });
+
+  var email = document.getElementById('email');
+  var password = document.getElementById('password');
+
+  function goTo(step) {
+    root.setAttribute('data-step', step);
+    var h = document.querySelector(step === '2'
+      ? (root.getAttribute('data-scenario') === 'no-build' ? '#h-nobuild' : '#h-login')
+      : '#h-email');
+    if (h) h.focus();
+  }
+
+  document.getElementById('continue').addEventListener('click', function () {
+    var v = (email.value || '').trim();
+    if (v.indexOf('@') < 1) {
+      email.setAttribute('aria-invalid', 'true');
+      email.focus();
+      return;
+    }
+    email.removeAttribute('aria-invalid');
+    document.querySelectorAll('.js-email').forEach(function (n) { n.textContent = v; });
+    var initials = v.charAt(0).toUpperCase();
+    var m = v.split('@')[0].split(/[._-]/);
+    if (m.length > 1 && m[1]) initials = (m[0].charAt(0) + m[1].charAt(0)).toUpperCase();
+    document.querySelectorAll('.avatar').forEach(function (n) { n.textContent = initials; });
+    goTo('2');
+  });
+  email.addEventListener('input', function () { email.removeAttribute('aria-invalid'); });
+  email.addEventListener('keydown', function (e) { if (e.key === 'Enter') document.getElementById('continue').click(); });
+
+  document.getElementById('login').addEventListener('click', function () {
+    if (!password.value) {
+      password.setAttribute('aria-invalid', 'true');
+      password.focus();
+      return;
+    }
+    password.removeAttribute('aria-invalid');
+    showToast('Prototype: this would log you in to Sinch Build.');
+  });
+  password.addEventListener('input', function () { password.removeAttribute('aria-invalid'); });
+  password.addEventListener('keydown', function (e) { if (e.key === 'Enter') document.getElementById('login').click(); });
+
+  document.getElementById('start-over').addEventListener('click', function (e) {
+    e.preventDefault();
+    password.value = '';
+    password.removeAttribute('aria-invalid');
+    goTo('email');
+  });
+  // "What is a Sinch ID?" tooltip: hover/focus to preview, click or Enter to pin, Esc or outside click to close
+  var tips = [];
+  document.querySelectorAll('.tip-btn').forEach(function (b) {
+    var t = document.getElementById(b.getAttribute('aria-describedby'));
+    var tip = {b: b, t: t, pinned: false};
+    function open() { t.hidden = false; b.setAttribute('aria-expanded', 'true'); }
+    function close() { t.hidden = true; b.setAttribute('aria-expanded', 'false'); }
+    tip.close = function () { tip.pinned = false; close(); };
+    b.addEventListener('mouseenter', open);
+    b.addEventListener('mouseleave', function () { if (!tip.pinned) close(); });
+    b.addEventListener('focus', open);
+    b.addEventListener('blur', function () { if (!tip.pinned) close(); });
+    b.addEventListener('click', function () { tip.pinned = !tip.pinned; if (tip.pinned) open(); else close(); });
+    tips.push(tip);
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') tips.forEach(function (x) { x.close(); }); });
+  document.addEventListener('click', function (e) { tips.forEach(function (x) { if (!x.b.contains(e.target) && !x.t.contains(e.target)) x.close(); }); });
+
+  var email = document.getElementById('email');
+  var password = document.getElementById('password');
+
+  function goTo(step) {
+    root.setAttribute('data-step', step);
+    var h = document.querySelector(step === '2'
+      ? (root.getAttribute('data-scenario') === 'no-build' ? '#h-nobuild' : '#h-login')
+      : '#h-email');
+    if (h) h.focus();
+  }
+
+  document.getElementById('continue').addEventListener('click', function () {
+    var v = (email.value || '').trim();
+    if (v.indexOf('@') < 1) {
+      email.setAttribute('aria-invalid', 'true');
+      email.focus();
+      return;
+    }
+    email.removeAttribute('aria-invalid');
+    document.querySelectorAll('.js-email').forEach(function (n) { n.textContent = v; });
+    var initials = v.charAt(0).toUpperCase();
+    var m = v.split('@')[0].split(/[._-]/);
+    if (m.length > 1 && m[1]) initials = (m[0].charAt(0) + m[1].charAt(0)).toUpperCase();
+    document.querySelectorAll('.avatar').forEach(function (n) { n.textContent = initials; });
+    goTo('2');
+  });
+  email.addEventListener('input', function () { email.removeAttribute('aria-invalid'); });
+  email.addEventListener('keydown', function (e) { if (e.key === 'Enter') document.getElementById('continue').click(); });
+
+  document.getElementById('login').addEventListener('click', function () {
+    if (!password.value) {
+      password.setAttribute('aria-invalid', 'true');
+      password.focus();
+      return;
+    }
+    password.removeAttribute('aria-invalid');
+    showToast('Prototype: this would log you in to Sinch Build.');
+  });
+  password.addEventListener('input', function () { password.removeAttribute('aria-invalid'); });
+  password.addEventListener('keydown', function (e) { if (e.key === 'Enter') document.getElementById('login').click(); });
+
+  document.getElementById('start-over').addEventListener('click', function (e) {
+    e.preventDefault();
+    password.value = '';
+    password.removeAttribute('aria-invalid');
+    goTo('email');
+  });
+})();
+</script>
+</body>
+</html>
