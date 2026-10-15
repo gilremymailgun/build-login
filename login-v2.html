@@ -25,6 +25,18 @@ body{font-family:var(--font);color:var(--ink);background:#fff;min-height:100vh;m
 html[data-step="2"] .start-over{display:block}
 @media (max-width:480px){.start-over{padding:16px 20px}}
 
+/* Transition loader: keeps the outgoing step's height so the logo never moves */
+.form{position:relative}
+.stack{position:relative}
+html.is-loading .form{pointer-events:none}
+html.is-loading .stack>*{visibility:hidden}
+html.is-loading .stack::after{
+  content:"";position:absolute;left:50%;top:8px;width:24px;height:24px;margin:0 0 0 -12px;
+  border:2px solid #D0D0D0;border-top-color:#757575;border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){html.is-loading .stack::after{animation-duration:2s}}
 main{flex:1;display:flex;justify-content:center;align-items:center;padding:96px 20px}
 .form{width:100%;max-width:325px;display:flex;flex-direction:column;gap:24px}
 .logo{display:block;align-self:flex-start;width:143px;height:32px;max-width:100%}
@@ -324,7 +336,18 @@ html[data-scenario="build-plus"] #login-accounts{display:flex}
   var email = document.getElementById('email');
   var password = document.getElementById('password');
 
+  var LOAD_MS = 900;
   function goTo(step) {
+    if (root.classList.contains('is-loading')) return;
+    root.classList.add('is-loading');
+    root.setAttribute('aria-busy', 'true');
+    setTimeout(function () {
+      root.classList.remove('is-loading');
+      root.removeAttribute('aria-busy');
+      swap(step);
+    }, LOAD_MS);
+  }
+  function swap(step) {
     root.setAttribute('data-step', step);
     var h = document.querySelector(step === '2'
       ? (root.getAttribute('data-scenario') === 'no-build' ? '#h-nobuild' : '#h-login')
